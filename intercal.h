@@ -11,24 +11,23 @@ tail tail_new(spot n){
     return t;
 }
 
-spot ror(spot s, spot n)
-{
-    return (s >> n) | ((s & 1) << (16 - n));
+spot ror (spot x) {
+  return (x >> 1) | (x << 15);
 }
 
 spot spot_or(spot s)
 {
-    return s | ror(s, 1);
+    return s | ror(s);
 }
 
 spot spot_and(spot s)
 {
-    return s & ror(s, 1);
+    return s & ror(s);
 }
 
 spot spot_xor(spot s)
 {
-    return s ^ ror(s, 1);
+    return s ^ ror(s);
 }
 
 spot spot_select(spot base, spot mask)
