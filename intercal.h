@@ -1,47 +1,34 @@
 typedef unsigned int spot;
 typedef unsigned long twospot;
+
+typedef spot* tail;
+typedef twospot* hybrid;
 // may only work on 64-bit architecture
+
+tail tail_new(spot n){
+    tail t = malloc(sizeof(spot) * n);
+    memset(t, 0, sizeof(spot) * n);
+    return t;
+}
+
+spot ror(spot s, spot n)
+{
+    return (s >> n) | ((s & 1) << (16 - n));
+}
 
 spot spot_or(spot s)
 {
-    spot res = 0;
-    spot cpy = s >> 1;
-    spot cpy2 = s;
-    for(int i = 0; i < 16; i++)
-    {
-        res |= (1 & (cpy2 | cpy)) << i;
-        cpy >>= 1;
-        cpy2 >>= 1;
-    }
-    return res | (((s & 1) | ((s & (1 << 15)) >> 15)) << 15);
+    return s | ror(s, 1);
 }
 
 spot spot_and(spot s)
 {
-    spot res = 0;
-    spot cpy = s >> 1;
-    spot cpy2 = s;
-    for(int i = 0; i < 16; i++)
-    {
-        res |= (1 & (cpy2 & cpy)) << i;
-        cpy >>= 1;
-        cpy2 >>= 1;
-    }
-    return res | (((s & 1) & ((s & (1 << 15)) >> 15)) << 15);
+    return s & ror(s, 1);
 }
 
 spot spot_xor(spot s)
 {
-    spot res = 0;
-    spot cpy = s >> 1;
-    spot cpy2 = s;
-    for(int i = 0; i < 16; i++)
-    {
-        res |= (1 & (cpy2 ^ cpy)) << i;
-        cpy >>= 1;
-        cpy2 >>= 1;
-    }
-    return res | (((s & 1) ^ ((s & (1 << 15)) >> 15)) << 15);
+    return s ^ ror(s, 1);
 }
 
 spot spot_select(spot base, spot mask)
